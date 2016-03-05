@@ -3,8 +3,10 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
 from django.contrib.auth import logout
 from django.contrib.auth.models import User
+import json
 
 from .models import Song, Artist, Album
 
@@ -108,3 +110,20 @@ def artist_page(request, key):
     artist = get_object_or_404(Artist, key=key)
     c['artist'] = artist
     return render(request, 'app/single/artist.html', c)
+
+
+@require_POST
+@login_required
+def favorite_item(request):
+    c = {}
+    data = request.POST
+
+    album = get_object_or_404(Album, key=data.get('key'))
+    if data.get("favorited") == 'true':
+        album.favorited = False
+        c['msg'] = 'removed'
+    else:
+        album.favorited = True
+        c['msg'] = 'added'
+    album.save()
+    return HttpResponse(json.dumps(c), content_type='application/json')

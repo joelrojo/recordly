@@ -6,6 +6,36 @@
 {% block js_includes %}
 <script>
     $(function(){
+        $(".favorite").click(function(){
+
+            var t = $(this);
+            t.blur();
+            t.hasClass('btn-primary');
+
+            var favorited = t.hasClass('btn-success');
+            var data = {
+                'csrfmiddlewaretoken' : "{{ csrf_token }}",
+                'key': t.data('key'),
+                'favorited': favorited,
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '{% url "favorite_item" %}',
+                data: data,
+                dataType: 'json',
+                success: function(resp) {
+                    if (resp.msg == 'added') {
+                        t.removeClass('btn-primary').addClass('btn-success');
+                        t.html("Favorited");
+                    }
+                    else {
+                        t.removeClass('btn-success').addClass('btn-primary');
+                        t.html("&plus; Favorite");
+                    }
+                },
+            });
+        });
     });
 </script>
 {% endblock js_includes %}
