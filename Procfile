@@ -1,0 +1,1 @@
+web: gunicorn recordly.wsgi --log-file -
