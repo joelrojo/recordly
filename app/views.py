@@ -10,6 +10,9 @@ from django.contrib.auth.models import User
 
 
 def home(request):
+    if request.user.is_authenticated():
+        return redirect(settings.LOGIN_REDIRECT_URL)
+
     c = {}
     return render(request, 'home.html', c)
 
@@ -60,6 +63,11 @@ def signup_user(request):
 
 
 @login_required
-def app_home(request):
+def albums(request):
     c = {}
-    return render(request, 'app/home.html', c)
+    return render(request, 'app/albums.html', c)
+
+@login_required
+def favorites(request):
+    c = {}
+    return render(request, 'app/favorites.html', c)

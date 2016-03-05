@@ -20,6 +20,30 @@
   </head>
 
   <body class="app">
+    
+    {% if request.user.is_authenticated %}
+      <nav class="navbar navbar-fixed-top navbar-dark bg-inverse">
+        <a class="navbar-brand" href="#">Recordly</a>
+        
+          
+        
+        <ul class="nav navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'albums' %}">Albums</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'favorites' %}">Favorites</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+          </li>
+        </ul>
+        <form class="form-inline pull-xs-right">
+          <input class="form-control" type="text" placeholder="Search your collection">
+          <button class="btn btn-primary" type="submit">Search</button>
+        </form>
+      </nav>
+    {% endif %}
     <div class="container">
       {% block content %}
       {% endblock content %}
