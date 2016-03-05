@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Song(models.Model):
@@ -33,6 +34,7 @@ class Album(models.Model):
     favorited = models.BooleanField(default=False)
     songs = models.ManyToManyField(Song, blank=True)
     artist = models.ForeignKey(Artist, blank=True)
+    user = models.ForeignKey(User, blank=True)
 
     def __unicode__(self):
         return self.title or u''

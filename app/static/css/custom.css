@@ -204,3 +204,11 @@ html.app {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
+
+/* album items */
+.item {
+    padding: 20px;
+    background-color: #fff;
+    margin-bottom: 20px;
+}

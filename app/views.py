@@ -55,7 +55,10 @@ def signup_user(request):
         )
         new_user.save()
 
-        user = authenticate(username=request.POST['username'], password=request.POST['password'])
+        user = authenticate(
+            username=request.POST['username'],
+            password=request.POST['password']
+        )
         if user is not None:
             login(request, user)
             return redirect(settings.LOGIN_REDIRECT_URL)
@@ -68,10 +71,38 @@ def signup_user(request):
 @login_required
 def albums(request):
     c = {}
+    c['albums'] = Album.objects.filter(user=request.user)
     return render(request, 'app/albums.html', c)
 
 
 @login_required
 def favorites(request):
     c = {}
+    c['albums'] = Album.objects.filter(user=request.user, favorited=True)
+    c['songs'] = Song.objects.filter(favorited=True)
+    c['artists'] = Artist.objects.filter(favorited=True)
     return render(request, 'app/favorites.html', c)
+
+
+@login_required
+def album_page(request, key):
+    c = {}
+    album = get_object_or_404(Album, key=key)
+    c['album'] = album
+    return render(request, 'app/single/album.html', c)
+
+
+@login_required
+def song_page(request, key):
+    c = {}
+    song = get_object_or_404(Song, key=key)
+    c['song'] = song
+    return render(request, 'app/single/song.html', c)
+
+
+@login_required
+def artist_page(request, key):
+    c = {}
+    artist = get_object_or_404(Artist, key=key)
+    c['artist'] = artist
+    return render(request, 'app/single/artist.html', c)

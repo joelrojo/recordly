@@ -1,0 +1,12 @@
+{% extends 'app/base.html' %}
+{% load static from staticfiles %}
+
+{% block title %} | {{ song.title }}{% endblock title %}
+
+{% block js_includes %}
+{% endblock js_includes %}
+
+
+{% block content %}
+<h1>Song title: {{ song.title }}</h1>
+{% endblock content %}

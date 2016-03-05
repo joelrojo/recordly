@@ -9,4 +9,32 @@
 
 {% block content %}
 <h1>Your Favorites</h1>
+<hr>
+{% if albums %}
+    <h2>Favorite Albums</h2>
+    {% for album in albums %}
+      <div class="item">
+        <h4><a href="{% url 'album_page' album.key %}">{{ album.title }}</a></h4>
+      </div>
+    {% endfor %}    
+{% endif %}
+
+{% if songs %}
+    <h2>Favorite Songs</h2>
+    {% for song in songs %}
+      <div class="item">
+        <h4><a href="{% url 'song_page' song.key %}">{{ song.title }}</a></h4>
+      </div>
+    {% endfor %}    
+{% endif %}
+
+{% if artists %}
+    <h2>Favorite Artists</h2>
+    {% for artist in artists %}
+      <div class="item">
+        <h4><a href="{% url 'artist_page' artist.key %}">{{ artist.name }}</a></h4>
+      </div>
+    {% endfor %}    
+{% endif %}
+
 {% endblock content %}

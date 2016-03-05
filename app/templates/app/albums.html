@@ -4,10 +4,46 @@
 {% block title %} | Your Album Collection{% endblock title %}
 
 {% block js_includes %}
+<script>
+    $(function(){
+    });
+</script>
 {% endblock js_includes %}
 
 
 {% block content %}
-<h1>Your Album Collection</h1>
-<button class="btn btn-primary">&plus; Add Album</button>
+<div class="modal fade" id="add-album">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Add Album</h4>
+      </div>
+      <div class="modal-body">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Add</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<h1 style="display:inline;">Your Album Collection</h1>
+<button class="btn btn-primary" style="float:right;" data-toggle="modal" data-target="#add-album">&plus; Add Album</button>
+<hr>
+{% for album in albums %}
+  <div class="item">
+    <h4 style="display:inline;"><a href="{% url 'album_page' album.key %}">{{ album.title }}</a></h4>
+    {% if album.favorited %}
+        <button type="button" class="btn btn-success btn-sm favorite" style="float:right;" data-key="{{ album.key }}">Favorited</button>
+    {% else %}
+        <button type="button" class="btn btn-primary btn-sm favorite" style="float:right;" data-key="{{ album.key }}">&plus; Favorite</button>
+    {% endif %}
+  </div>
+{% endfor %}
 {% endblock content %}
