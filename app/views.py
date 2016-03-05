@@ -46,24 +46,26 @@ def signup_user(request):
 
     c = {}
     if request.method == 'POST':
-        new_user = User.objects.create_user(
-            username=request.POST['username'],
-            first_name=request.POST['first_name'],
-            last_name=request.POST['last_name'],
-            email=request.POST['email'],
-            password=request.POST['password']
-        )
-        new_user.save()
-
-        user = authenticate(
-            username=request.POST['username'],
-            password=request.POST['password']
-        )
-        if user is not None:
-            login(request, user)
-            return redirect(settings.LOGIN_REDIRECT_URL)
-        else:
-            c['error'] = 'Sign up failed. Please try again.'
+        try:
+            new_user = User.objects.create_user(
+                username=request.POST['username'],
+                password=request.POST['password']
+            )
+            new_user.save()
+            print "NEW USER"
+            user = authenticate(
+                username=request.POST['username'],
+                password=request.POST['password']
+            )
+            print "USER AUTH"
+            if user is not None:
+                login(request, user)
+                print "USER LOGIN"
+                return redirect(settings.LOGIN_REDIRECT_URL)
+            else:
+                c['error'] = 'Login failed. Please try again.'
+        except:
+            c['error'] = 'That username already exists.'
 
     return render(request, 'app/signup.html', c)
 
