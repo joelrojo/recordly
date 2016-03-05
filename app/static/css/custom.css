@@ -3,9 +3,9 @@
  */
 
 /* Links */
-a,
-a:focus,
-a:hover {
+body.home a,
+body.home a:focus,
+body.home a:hover {
   color: #fff;
 }
 
@@ -28,11 +28,21 @@ html,
 body {
   height: 100%;
   background-color: #333;
+  font-family: 'Lato', sans-serif;
 }
-body {
+body.home {
   color: #fff;
   text-align: center;
   text-shadow: 0 .05rem .1rem rgba(0,0,0,.5);
+}
+
+body.app {
+    padding-top: 40px;
+    padding-bottom: 40px;
+    background-color: #eee;
+}
+html.app {
+    background-color: #eee;
 }
 
 /* Extra markup and styles for table-esque vertical and horizontal centering */
@@ -157,4 +167,40 @@ body {
   .cover-container {
     width: 42rem;
   }
+}
+
+/* sign up and login */
+
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+.form-signin .checkbox {
+  font-weight: normal;
+}
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }

@@ -1,0 +1,26 @@
+{% extends 'app/base.html' %}
+{% load static from staticfiles %}
+
+{% block title %} | Log In{% endblock title %}
+
+{% block js_includes %}
+{% endblock js_includes %}
+
+
+{% block content %}
+<form class="form-signin" url="{% url 'login' %}" method="POST">{% csrf_token %}
+    <h2 class="form-signin-heading">Log in</h2>
+    {% if error %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+    {% endif %}
+    <label class="sr-only">Email address</label>
+    <input type="text" name="username" class="form-control" placeholder="username" required autofocus>
+
+    <label class="sr-only">Password</label>
+    <input type="password" name="password" class="form-control" placeholder="Password" required>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">Log In</button>
+</form>
+<p style="text-align:center;">Don't have an account? <a href="{% url 'signup' %}">Sign up here</a></p>
+{% endblock content %}
