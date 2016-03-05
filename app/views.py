@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from django.contrib.auth.models import User
 
-# from .models import
+from .models import Song, Artist, Album
 
 
 def home(request):
@@ -15,6 +15,7 @@ def home(request):
 
     c = {}
     return render(request, 'home.html', c)
+
 
 def login_user(request):
     if request.user.is_authenticated():
@@ -33,9 +34,11 @@ def login_user(request):
 
     return render(request, 'app/login.html', c)
 
+
 def logout_user(request):
     logout(request)
     return redirect('/')
+
 
 def signup_user(request):
     if request.user.is_authenticated():
@@ -66,6 +69,7 @@ def signup_user(request):
 def albums(request):
     c = {}
     return render(request, 'app/albums.html', c)
+
 
 @login_required
 def favorites(request):
