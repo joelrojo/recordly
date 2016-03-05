@@ -133,3 +133,5 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 LOGIN_REDIRECT_URL = '/albums'
 LOGIN_URL = '/login'
+
+KEY_SALT = 'v(h8,b6@)37*/6:6Mw2U'

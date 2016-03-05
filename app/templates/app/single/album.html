@@ -1,12 +1,19 @@
 {% extends 'app/base.html' %}
 {% load static from staticfiles %}
 
-{% block title %} | {{ album.title }}{% endblock title %}
+{% block title %} | {{ album.title }} by {{ album.artist.name }}{% endblock title %}
 
 {% block js_includes %}
 {% endblock js_includes %}
 
 
 {% block content %}
-<h1>Album title: {{ album.title }}</h1>
+<h1>Album: {{ album.title }} by <a href="{% url 'artist_page' album.artist.key %}">{{ album.artist.name }}</a></h1>
+<hr>
+<h2>Song List</h2>
+<ul>
+    {% for song in album.songs.all  %}
+    <li><a href="{% url 'song_page' song.key %}">{{ song.title }}</a></li>  
+    {% endfor %}
+</ul>
 {% endblock content %}

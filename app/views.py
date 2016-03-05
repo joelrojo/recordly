@@ -6,9 +6,19 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.contrib.auth import logout
 from django.contrib.auth.models import User
+
+from datetime import datetime
 import json
+import uuid
 
 from .models import Song, Artist, Album
+
+
+def create_unique_key(unique_ids):
+    hash_string = "-".join(unique_ids)
+    hash_string = '%s!%s' % (hash_string, settings.KEY_SALT)
+    u = uuid.uuid3(uuid.NAMESPACE_URL, hash_string.encode('utf8'))
+    return u.hex
 
 
 def home(request):
@@ -126,4 +136,72 @@ def favorite_item(request):
         album.favorited = True
         c['msg'] = 'added'
     album.save()
+    return HttpResponse(json.dumps(c), content_type='application/json')
+
+
+@require_POST
+@login_required
+def add_album(request):
+    c = {}
+    data = request.POST
+
+    print data.get('title')
+    print data.get('artist')
+    print data.get('song')
+
+    # check for duplicates
+    if Album.objects.filter(title=data.get('title'), user=request.user).exists():
+        print "album exists"
+        c['error_msg'] = 'Album exists. Please try another title.'
+        return HttpResponse(json.dumps(c), content_type='application/json')
+
+    if Artist.objects.filter(name=data.get('artist')).exists():
+        c['error_msg'] = 'Artist exists. Please try again.'
+        return HttpResponse(json.dumps(c), content_type='application/json')
+
+    if Song.objects.filter(title=data.get('song')).exists():
+        c['error_msg'] = 'Song exists. Please try again.'
+        return HttpResponse(json.dumps(c), content_type='application/json')
+
+    # generate unique key and create artist
+    _u = [str(request.user.username), str(datetime.now())]
+    unique_key = create_unique_key(_u)[:8]
+
+    while Artist.objects.filter(key=unique_key).exists():
+        _u = [str(request.user.username), str(datetime.now())]
+        unique_key = create_unique_key(_u)[:8]
+
+    artist_obj = Artist(key=unique_key, name=data.get('artist'))
+    artist_obj.save()
+
+    # generate unique key and create song
+    _u = [str(request.user.username), str(datetime.now())]
+    unique_key = create_unique_key(_u)[:8]
+
+    while Song.objects.filter(key=unique_key).exists():
+        _u = [str(request.user.username), str(datetime.now())]
+        unique_key = create_unique_key(_u)[:8]
+
+    song_obj = Song(key=unique_key, title=data.get('song'))
+    song_obj.save()
+
+    # generate unique key for album
+    _u = [str(request.user.username), str(datetime.now())]
+    unique_key = create_unique_key(_u)[:8]
+
+    while Album.objects.filter(key=unique_key).exists():
+        _u = [str(request.user.username), str(datetime.now())]
+        unique_key = create_unique_key(_u)[:8]
+
+    album = Album(
+        key=unique_key,
+        title=data.get('title'),
+        artist=artist_obj,
+        user=request.user
+    )
+    album.save()
+    album.songs.add(song_obj)
+    album.save()
+
+    c['success'] = True
     return HttpResponse(json.dumps(c), content_type='application/json')

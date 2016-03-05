@@ -14,5 +14,7 @@ urlpatterns = [
     url(r'^song/(?P<key>\w{8})$', views.song_page, {}, 'song_page'),
     url(r'^artist/(?P<key>\w{8})$', views.artist_page, {}, 'artist_page'),
 
+    url(r'^app/add_album$', views.add_album, {}, 'add_album'),
+
     url(r'^app/favorite$', views.favorite_item, {}, 'favorite_item'),
 ]

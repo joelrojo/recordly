@@ -6,6 +6,8 @@
 {% block js_includes %}
 <script>
     $(function(){
+
+        // ajax for favoriting
         $(".favorite").click(function(){
 
             var t = $(this);
@@ -36,6 +38,47 @@
                 },
             });
         });
+
+        // ajax for adding album
+        $("#add-album-btn").click(function(e){
+            
+            // validation
+            if ($("#title").val().length === 0 || $("#artist").val().length === 0 || $("#song").val().length === 0) {
+                $('#add-album-form .alert').html("Please fill out all fields").show();
+                return false;
+            }
+
+            var t = $(this);
+            t.blur();
+
+            var data = {
+                'csrfmiddlewaretoken' : "{{ csrf_token }}",
+                'title': $("#title").val(),
+                'artist': $("#artist").val(),
+                'song': $("#song").val(),
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '{% url "add_album" %}',
+                data: data,
+                dataType: 'json',
+                success: function(resp) {
+                    if (resp.success) {
+                        location.reload();
+                    }
+                    else {
+                        $('#add-album-form .alert').html(resp.error_msg).show();
+                    }
+                },
+            });
+        });
+        // clear form on modal close
+        $('#add-album').on('hide.bs.modal', function (e) {
+            $("#add-album-form").trigger('reset');
+        });
+
+
     });
 </script>
 {% endblock js_includes %}
@@ -52,11 +95,21 @@
         <h4 class="modal-title">Add Album</h4>
       </div>
       <div class="modal-body">
-        
+        <form id="add-album-form" url="{% url 'add_album' %}" method="POST">
+            <div class="alert alert-danger" role="alert" style="display:none;"></div>
+            <label class="sr-only">Title</label>
+            <input type="text" name="title" id="title" class="form-control" placeholder="Album title" required autofocus>
+
+            <label class="sr-only">Artist</label>
+            <input type="text" name="artist" id="artist" class="form-control" placeholder="Artist name" required>
+
+            <label class="sr-only">Songs</label>
+            <input type="text" name="song" id="song" class="form-control" placeholder="Song title" required>
+        </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Add</button>
+        <button type="button" class="btn btn-primary" id="add-album-btn">Add</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -68,7 +121,7 @@
 <hr>
 {% for album in albums %}
   <div class="item">
-    <h4 style="display:inline;"><a href="{% url 'album_page' album.key %}">{{ album.title }}</a></h4>
+    <h4 style="display:inline;"><a href="{% url 'album_page' album.key %}">{{ album.title }}</a> by <a href="{% url 'artist_page' album.artist.key %}">{{ album.artist.name }}</a></h4>
     {% if album.favorited %}
         <button type="button" class="btn btn-success btn-sm favorite" style="float:right;" data-key="{{ album.key }}">Favorited</button>
     {% else %}
